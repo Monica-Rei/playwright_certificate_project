@@ -7,7 +7,15 @@ import { RegisterPage } from "../../src/pages/register_page.ts";
 
 const BASE_URL = "https://tegb-backend-877a0b063d29.herokuapp.com/tegb";
 
-function generateUserData() {
+const ballance = 10000;
+
+type UserData = {
+  username: string;
+  password: string;
+  email: string;
+};
+
+function generateUserData(): UserData {
   return {
     username: faker.internet.username(),
     password: faker.internet.password(),
@@ -15,7 +23,7 @@ function generateUserData() {
   };
 }
 
-async function registerUser(page, userData) {
+async function registerUser(page, userData: UserData) {
   const loginPage = new LoginPage(page);
   const registerPage = new RegisterPage(page);
 
@@ -30,7 +38,7 @@ async function registerUser(page, userData) {
   await loginPage.expectSuccessMessage("Registrace úspěšná! Vítejte v TEG#B!");
 }
 
-async function loginViaApi(request, userData) {
+async function loginViaApi(request, userData: UserData) {
   const loginResponse = await request.post(`${BASE_URL}/login`, {
     headers: { "Content-Type": "application/json" },
     data: { username: userData.username, password: userData.password },
@@ -43,26 +51,30 @@ async function loginViaApi(request, userData) {
   return accessToken;
 }
 
-async function createAccountViaApi(request, accessToken) {
+async function createAccountViaApi(request, userData: UserData) {
+  const accessToken = await loginViaApi(request, userData);
   const accountResponse = await request.post(`${BASE_URL}/accounts/create`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     },
     data: {
-      startBalance: 10000,
+      startBalance: ballance,
       type: "Test",
     },
   });
   expect(accountResponse.status()).toBe(201);
 }
 
-async function loginUser(page, userData) {
+async function loginUser(page, userData: UserData) {
+  const dashboardPage = new DashboardPage(page);
   const loginPage = new LoginPage(page);
+
   await loginPage.openPage();
   await loginPage.fillUsername(userData.username);
   await loginPage.fillPassword(userData.password);
   await loginPage.clickLogin();
+  await dashboardPage.expectDashboardLoaded();
 }
 
 function generateProfileInformation(email: string) {
@@ -76,43 +88,43 @@ function generateProfileInformation(email: string) {
 }
 
 test.describe("Profile tests", () => {
-  let userData;
-  let dashboardPage: DashboardPage;
+  let userData: UserData;
 
   test.beforeEach(async ({ page, request }) => {
     userData = generateUserData();
 
     await registerUser(page, userData);
 
-    const accessToken = await loginViaApi(request, userData);
-    await createAccountViaApi(request, accessToken);
+    await createAccountViaApi(request, userData);
 
-    dashboardPage = new DashboardPage(page);
     await loginUser(page, userData);
-    await dashboardPage.expectDashboardLoaded();
   });
 
   test("Fill out profile and verify saved data", async ({ page }) => {
     const profileInformation = generateProfileInformation(userData.email);
     const profilePage = new ProfilePage(page);
+    const dashboardPage = new DashboardPage(page);
 
     await dashboardPage.openProfileSetting();
-    await profilePage.fillOutProfileForm(profileInformation);
+    await profilePage.fillOutProfileFormAndSubmit(profileInformation);
 
-    expect(await dashboardPage.profileName.textContent()).toContain(
+    expect(await dashboardPage.profileName).toContainText(
       profileInformation.firstName
     );
-    expect(await dashboardPage.profileSurname.textContent()).toContain(
+    expect(await dashboardPage.profileSurname).toContainText(
       profileInformation.lastName
     );
-    expect(await dashboardPage.profileEmail.textContent()).toContain(
+    expect(await dashboardPage.profileEmail).toContainText(
       profileInformation.email
     );
-    expect(await dashboardPage.profilePhone.textContent()).toContain(
+    expect(await dashboardPage.profilePhone).toContainText(
       profileInformation.phone
     );
-    expect(await dashboardPage.profileAge.textContent()).toContain(
+    expect(await dashboardPage.profileAge).toContainText(
       profileInformation.age
     );
+
+    await dashboardPage.checkAccountCreated();
+    await dashboardPage.checkFirstAccountBalance(ballance);
   });
 });

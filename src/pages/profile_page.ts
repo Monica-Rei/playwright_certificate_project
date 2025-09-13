@@ -52,7 +52,7 @@ export class ProfilePage {
     return this;
   }
 
-  async fillOutProfileForm(profileData: {
+  async fillOutProfileFormAndSubmit(profileData: {
     firstName: string;
     lastName: string;
     email: string;

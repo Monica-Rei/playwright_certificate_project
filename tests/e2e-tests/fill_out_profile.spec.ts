@@ -92,12 +92,17 @@ test.describe("Profile tests", () => {
 
   test.beforeEach(async ({ page, request }) => {
     userData = generateUserData();
+    await test.step("Register user via UI", async () => {
+      await registerUser(page, userData);
+    });
 
-    await registerUser(page, userData);
+    await test.step("Create account via API", async () => {
+      await createAccountViaApi(request, userData);
+    });
 
-    await createAccountViaApi(request, userData);
-
-    await loginUser(page, userData);
+    await test.step("Login user via UI", async () => {
+      await loginUser(page, userData);
+    });
   });
 
   test("Fill out profile and verify saved data", async ({ page }) => {

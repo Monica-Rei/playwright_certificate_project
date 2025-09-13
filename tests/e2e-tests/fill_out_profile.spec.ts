@@ -105,26 +105,35 @@ test.describe("Profile tests", () => {
     const profilePage = new ProfilePage(page);
     const dashboardPage = new DashboardPage(page);
 
-    await dashboardPage.openProfileSetting();
-    await profilePage.fillOutProfileFormAndSubmit(profileInformation);
+    await test.step("Open profile settings", async () => {
+      await dashboardPage.openProfileSetting();
+    });
 
-    await expect(dashboardPage.profileName).toContainText(
-      profileInformation.firstName
-    );
-    await expect(dashboardPage.profileSurname).toContainText(
-      profileInformation.lastName
-    );
-    await expect(dashboardPage.profileEmail).toContainText(
-      profileInformation.email
-    );
-    await expect(dashboardPage.profilePhone).toContainText(
-      profileInformation.phone
-    );
-    await expect(dashboardPage.profileAge).toContainText(
-      profileInformation.age
-    );
+    await test.step("Fill out and submit profile form", async () => {
+      await profilePage.fillOutProfileFormAndSubmit(profileInformation);
+    });
 
-    await dashboardPage.checkAccountCreated();
-    await dashboardPage.checkFirstAccountBalance(ballance);
+    await test.step("Verify saved profile data", async () => {
+      await expect(dashboardPage.profileName).toContainText(
+        profileInformation.firstName
+      );
+      await expect(dashboardPage.profileSurname).toContainText(
+        profileInformation.lastName
+      );
+      await expect(dashboardPage.profileEmail).toContainText(
+        profileInformation.email
+      );
+      await expect(dashboardPage.profilePhone).toContainText(
+        profileInformation.phone
+      );
+      await expect(dashboardPage.profileAge).toContainText(
+        profileInformation.age
+      );
+    });
+
+    await test.step("Check account creation and balance", async () => {
+      await dashboardPage.checkAccountCreated();
+      await dashboardPage.checkFirstAccountBalance(ballance);
+    });
   });
 });

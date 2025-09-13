@@ -108,19 +108,19 @@ test.describe("Profile tests", () => {
     await dashboardPage.openProfileSetting();
     await profilePage.fillOutProfileFormAndSubmit(profileInformation);
 
-    expect(await dashboardPage.profileName).toContainText(
+    await expect(dashboardPage.profileName).toContainText(
       profileInformation.firstName
     );
-    expect(await dashboardPage.profileSurname).toContainText(
+    await expect(dashboardPage.profileSurname).toContainText(
       profileInformation.lastName
     );
-    expect(await dashboardPage.profileEmail).toContainText(
+    await expect(dashboardPage.profileEmail).toContainText(
       profileInformation.email
     );
-    expect(await dashboardPage.profilePhone).toContainText(
+    await expect(dashboardPage.profilePhone).toContainText(
       profileInformation.phone
     );
-    expect(await dashboardPage.profileAge).toContainText(
+    await expect(dashboardPage.profileAge).toContainText(
       profileInformation.age
     );
 

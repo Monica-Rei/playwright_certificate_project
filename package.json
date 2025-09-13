@@ -1,0 +1,23 @@
+{
+  "name": "playwright_certificate_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Monica-Rei/playwright_certificate_project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Monica-Rei/playwright_certificate_project/issues"
+  },
+  "homepage": "https://github.com/Monica-Rei/playwright_certificate_project#readme",
+  "devDependencies": {
+    "@faker-js/faker": "^10.0.0",
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^24.3.1"
+  }
+}

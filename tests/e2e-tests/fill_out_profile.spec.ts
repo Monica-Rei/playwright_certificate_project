@@ -5,19 +5,12 @@ import { ProfilePage } from "../../src/pages/profile_page.ts";
 import { faker } from "@faker-js/faker";
 import { RegisterPage } from "../../src/pages/register_page.ts";
 
-const username: string = faker.internet.username();
-const password: string = faker.internet.password();
-const email: string = faker.internet.email();
-
 test.describe("Profile tests", () => {
+  const username: string = faker.internet.username();
+  const password: string = faker.internet.password();
+  const email: string = faker.internet.email();
+
   let dashboardPage: DashboardPage;
-  let profileInformation: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    age: string;
-  };
 
   test.beforeEach(async ({ page, request }) => {
     // register new user
@@ -80,17 +73,17 @@ test.describe("Profile tests", () => {
     await loginPage.fillPassword(password);
     await loginPage.clickLogin();
     await dashboardPage.expectDashboardLoaded();
+  });
 
-    profileInformation = {
+  test("Fill out profile and verify saved data", async ({ page }) => {
+    const profileInformation = {
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       email: email,
       phone: faker.helpers.replaceSymbols("###-###-####"),
       age: faker.number.int({ min: 18, max: 80 }).toString(),
     };
-  });
 
-  test("Fill out profile and verify saved data", async ({ page }) => {
     const profilePage = new ProfilePage(page);
 
     await dashboardPage.openProfileSetting();

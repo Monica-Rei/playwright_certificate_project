@@ -21,42 +21,29 @@ export class ProfilePage {
     this.saveButton = page.locator("//button[@type='submit']");
   }
 
-  private async clearAndFill(input: Locator, value: string) {
-    await input.waitFor({ state: "visible" });
-    await input.fill(value);
-
-    // // Dispatch input a change event, aby frontend zachytil změnu
-    // await input.evaluate((el, val) => {
-    //   (el as HTMLInputElement).value = val;
-    //   el.dispatchEvent(new Event("input", { bubbles: true }));
-    //   el.dispatchEvent(new Event("change", { bubbles: true }));
-    // }, value);
-
-    // await this.page.keyboard.press("Tab"); // trigger blur
-  }
-
   async fillName(name: string): Promise<this> {
-    await this.clearAndFill(this.nameInput, name);
+    await this.nameInput.fill(name);
     return this;
   }
 
   async fillSurname(surname: string): Promise<this> {
-    await this.clearAndFill(this.surnameInput, surname);
+    await this.surnameInput.fill(surname);
     return this;
   }
 
   async fillEmail(email: string): Promise<this> {
-    await this.clearAndFill(this.emailInput, email);
+    await this.emailInput.fill(email);
     return this;
   }
 
   async fillPhone(phone: string): Promise<this> {
-    await this.clearAndFill(this.phoneInput, phone);
+    await this.phoneInput.fill(phone);
+    return this;
     return this;
   }
 
   async fillAge(age: string): Promise<this> {
-    await this.clearAndFill(this.ageInput, age);
+    await this.ageInput.fill(age);
     return this;
   }
 

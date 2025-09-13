@@ -5,106 +5,113 @@ import { ProfilePage } from "../../src/pages/profile_page.ts";
 import { faker } from "@faker-js/faker";
 import { RegisterPage } from "../../src/pages/register_page.ts";
 
-test.describe("Profile tests", () => {
-  const username: string = faker.internet.username();
-  const password: string = faker.internet.password();
-  const email: string = faker.internet.email();
+const BASE_URL = "https://tegb-backend-877a0b063d29.herokuapp.com/tegb";
 
+function generateUserData() {
+  return {
+    username: faker.internet.username(),
+    password: faker.internet.password(),
+    email: faker.internet.email(),
+  };
+}
+
+async function registerUser(page, userData) {
+  const loginPage = new LoginPage(page);
+  const registerPage = new RegisterPage(page);
+
+  await loginPage.openPage();
+  await loginPage.clickRegister();
+
+  await registerPage.typeUsername(userData.username);
+  await registerPage.typePassword(userData.password);
+  await registerPage.typeEmail(userData.email);
+
+  await registerPage.clickRegister();
+  await loginPage.expectSuccessMessage("Registrace úspěšná! Vítejte v TEG#B!");
+}
+
+async function loginViaApi(request, userData) {
+  const loginResponse = await request.post(`${BASE_URL}/login`, {
+    headers: { "Content-Type": "application/json" },
+    data: { username: userData.username, password: userData.password },
+  });
+
+  expect(loginResponse.status()).toBe(201);
+  const loginResponseBody = await loginResponse.json();
+  const accessToken = loginResponseBody.access_token;
+  expect(accessToken).toBeTruthy();
+  return accessToken;
+}
+
+async function createAccountViaApi(request, accessToken) {
+  const accountResponse = await request.post(`${BASE_URL}/accounts/create`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: {
+      startBalance: 10000,
+      type: "Test",
+    },
+  });
+  expect(accountResponse.status()).toBe(201);
+}
+
+async function loginUser(page, userData) {
+  const loginPage = new LoginPage(page);
+  await loginPage.openPage();
+  await loginPage.fillUsername(userData.username);
+  await loginPage.fillPassword(userData.password);
+  await loginPage.clickLogin();
+}
+
+function generateProfileInformation(email: string) {
+  return {
+    firstName: faker.person.firstName(),
+    lastName: faker.person.lastName(),
+    email,
+    phone: faker.helpers.replaceSymbols("###-###-####"),
+    age: faker.number.int({ min: 18, max: 80 }).toString(),
+  };
+}
+
+test.describe("Profile tests", () => {
+  let userData;
   let dashboardPage: DashboardPage;
 
   test.beforeEach(async ({ page, request }) => {
-    // register new user
-    const loginPage = new LoginPage(page);
-    const registerPage = new RegisterPage(page);
+    userData = generateUserData();
 
-    await loginPage.openPage();
-    await loginPage.clickRegister();
+    await registerUser(page, userData);
 
-    await registerPage.typeUsername(username);
-    await registerPage.typePassword(password);
-    await registerPage.typeEmail(faker.internet.email());
-
-    await registerPage.clickRegister();
-    await loginPage.expectSuccessMessage(
-      "Registrace úspěšná! Vítejte v TEG#B!"
-    );
-
-    // create account for new user
-
-    // --- Login přes API ---
-    const loginResponse = await request.post(
-      "https://tegb-backend-877a0b063d29.herokuapp.com/tegb/login",
-      {
-        headers: { "Content-Type": "application/json" },
-        data: { username, password },
-      }
-    );
-
-    expect(loginResponse.status()).toBe(201);
-
-    const loginResponseBody = await loginResponse.json();
-    const accessToken = loginResponseBody.access_token;
-    expect(accessToken).toBeTruthy();
-
-    // --- Vytvoření účtu přes API ---
-    const accountResponse = await request.post(
-      "https://tegb-backend-877a0b063d29.herokuapp.com/tegb/accounts/create",
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        data: {
-          startBalance: 10000,
-          type: "Test",
-        },
-      }
-    );
-
-    expect(accountResponse.status()).toBe(201);
-    // const accountResponseBody = await accountResponse.json();
-
-    // login with registered user
+    const accessToken = await loginViaApi(request, userData);
+    await createAccountViaApi(request, accessToken);
 
     dashboardPage = new DashboardPage(page);
-
-    await loginPage.openPage();
-    await loginPage.fillUsername(username);
-    await loginPage.fillPassword(password);
-    await loginPage.clickLogin();
+    await loginUser(page, userData);
     await dashboardPage.expectDashboardLoaded();
   });
 
   test("Fill out profile and verify saved data", async ({ page }) => {
-    const profileInformation = {
-      firstName: faker.person.firstName(),
-      lastName: faker.person.lastName(),
-      email: email,
-      phone: faker.helpers.replaceSymbols("###-###-####"),
-      age: faker.number.int({ min: 18, max: 80 }).toString(),
-    };
-
+    const profileInformation = generateProfileInformation(userData.email);
     const profilePage = new ProfilePage(page);
 
     await dashboardPage.openProfileSetting();
-
-    // Vyplnění formuláře
     await profilePage.fillOutProfileForm(profileInformation);
 
-    // Po uložení ověřujeme přes dashboard (zobrazené hodnoty), ne přes inputy
-    await expect(dashboardPage.profileName).toContainText(
+    expect(await dashboardPage.profileName.textContent()).toContain(
       profileInformation.firstName
     );
-    await expect(dashboardPage.profileSurname).toContainText(
+    expect(await dashboardPage.profileSurname.textContent()).toContain(
       profileInformation.lastName
     );
-    await expect(dashboardPage.profileEmail).toContainText(
+    expect(await dashboardPage.profileEmail.textContent()).toContain(
       profileInformation.email
     );
-    await expect(dashboardPage.profilePhone).toContainText(
+    expect(await dashboardPage.profilePhone.textContent()).toContain(
       profileInformation.phone
     );
-    await expect(dashboardPage.profileAge).toContainText(
+    expect(await dashboardPage.profileAge.textContent()).toContain(
       profileInformation.age
     );
   });

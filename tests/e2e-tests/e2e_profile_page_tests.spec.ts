@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { LoginPage } from "../../src/pages/login_page";
-import { DashboardPage } from "../../src/pages/dashboard_page";
+import { LoginPage } from "../../src/pages/login_page.ts";
+import { DashboardPage } from "../../src/pages/dashboard_page.ts";
 import { ProfilePage } from "../../src/pages/profile_page.ts";
 import { faker } from "@faker-js/faker";
 import { RegisterPage } from "../../src/pages/register_page.ts";

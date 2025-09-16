@@ -14,6 +14,17 @@ export class DashboardPage {
   readonly profilePhone: Locator;
   readonly profileAge: Locator;
   readonly logoutButton: Locator;
+  readonly logo: Locator;
+  readonly homeMenu: Locator;
+  readonly accountsMenu: Locator;
+  readonly transactionsMenu: Locator;
+  readonly supportMenu: Locator;
+  readonly profileHeader: Locator;
+  readonly accountsHeader: Locator;
+  readonly accountNumberHeader: Locator;
+  readonly balanceHeader: Locator;
+  readonly accountTypeHeader: Locator;
+  readonly addAccountButton: Locator;
 
   //constructor
   constructor(page: Page) {
@@ -33,6 +44,29 @@ export class DashboardPage {
     this.profilePhone = this.page.locator("//div[@data-testid='phone']");
     this.profileAge = this.page.locator("//div[@data-testid='age']");
     this.logoutButton = this.page.locator("//button[@class='logout-link']");
+    this.logo = this.page.locator("//img[@alt='Tredgate Logo']");
+    this.homeMenu = this.page.locator("//nav//ul//li[1]");
+    this.accountsMenu = this.page.locator("//nav//ul//li[2]");
+    this.transactionsMenu = this.page.locator("//nav//ul//li[3]");
+    this.supportMenu = this.page.locator("//nav//ul//li[4]");
+    this.profileHeader = this.page.locator(
+      "//h2[@data-testid='profile-details-title']"
+    );
+    this.accountsHeader = this.page.locator(
+      "//h2[@data-testid='accounts-title']"
+    );
+    this.accountNumberHeader = this.page.locator(
+      "//tr[@class='account-heading']//th[@data-testid='account-number-heading']"
+    );
+    this.balanceHeader = this.page.locator(
+      "//tr[@class='account-heading']//th[@data-testid='account-balance-heading']"
+    );
+    this.accountTypeHeader = this.page.locator(
+      "//tr[@class='account-heading']//th[@data-testid='account-type-heading']"
+    );
+    this.addAccountButton = this.page.locator(
+      "//button[@class='account-action']"
+    );
   }
 
   async expectDashboardLoaded(): Promise<this> {
@@ -58,5 +92,10 @@ export class DashboardPage {
   async clickLogout(): Promise<LoginPage> {
     await this.logoutButton.click();
     return new LoginPage(this.page);
+  }
+
+  async clickAddAccount(): Promise<this> {
+    await this.addAccountButton.click();
+    return this;
   }
 }

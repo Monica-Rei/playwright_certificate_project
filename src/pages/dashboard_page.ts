@@ -98,4 +98,10 @@ export class DashboardPage {
     await this.addAccountButton.click();
     return this;
   }
+  /*tlacitko nefunguje, proto jsem tam dala <this> ... pokud by fungovalo, test by byl takhle
+
+  async clickAddAccount(): Promise<AccountPage> {
+    await this.addAccountButton.click();
+    return new AccountPage(this.page);
+  }*/
 }

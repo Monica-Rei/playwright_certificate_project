@@ -1,5 +1,6 @@
 import { expect, Locator, Page, test } from "@playwright/test";
 import { ProfilePage } from "./profile_page.ts";
+import { LoginPage } from "./login_page.ts";
 
 export class DashboardPage {
   readonly page: Page;
@@ -12,6 +13,7 @@ export class DashboardPage {
   readonly profileEmail: Locator;
   readonly profilePhone: Locator;
   readonly profileAge: Locator;
+  readonly logoutButton: Locator;
 
   //constructor
   constructor(page: Page) {
@@ -30,6 +32,7 @@ export class DashboardPage {
     this.profileEmail = this.page.locator("//div[@data-testid='email']");
     this.profilePhone = this.page.locator("//div[@data-testid='phone']");
     this.profileAge = this.page.locator("//div[@data-testid='age']");
+    this.logoutButton = this.page.locator("//button[@class='logout-link']");
   }
 
   async expectDashboardLoaded(): Promise<this> {
@@ -51,5 +54,9 @@ export class DashboardPage {
     const formattedBalance = expectedBalance.toFixed(2); // převede 10000 -> "10000.00"
     await expect(this.firstAccountBalance).toContainText(formattedBalance);
     return this;
+  }
+  async clickLogout(): Promise<LoginPage> {
+    await this.logoutButton.click();
+    return new LoginPage(this.page);
   }
 }

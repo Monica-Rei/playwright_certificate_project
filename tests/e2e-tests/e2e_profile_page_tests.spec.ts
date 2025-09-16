@@ -109,6 +109,7 @@ test.describe("Profile tests", () => {
     const profileInformation = generateProfileInformation(userData.email);
     const profilePage = new ProfilePage(page);
     const dashboardPage = new DashboardPage(page);
+    const loginPage = new LoginPage(page);
 
     await test.step("Open profile settings", async () => {
       await dashboardPage.openProfileSetting();
@@ -139,6 +140,10 @@ test.describe("Profile tests", () => {
     await test.step("Check account creation and balance", async () => {
       await dashboardPage.checkAccountCreated();
       await dashboardPage.checkFirstAccountBalance(ballance);
+    });
+
+    await test.step("Logout user", async () => {
+      await dashboardPage.clickLogout();
     });
   });
 });

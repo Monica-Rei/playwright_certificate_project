@@ -25,6 +25,7 @@ export class DashboardPage {
   readonly balanceHeader: Locator;
   readonly accountTypeHeader: Locator;
   readonly addAccountButton: Locator;
+  readonly profileDetailsTitle: Locator;
 
   //constructor
   constructor(page: Page) {
@@ -66,6 +67,9 @@ export class DashboardPage {
     );
     this.addAccountButton = this.page.locator(
       "//button[@class='account-action']"
+    );
+    this.profileDetailsTitle = this.page.locator(
+      "//div[@data-testid='account-summary']"
     );
   }
 

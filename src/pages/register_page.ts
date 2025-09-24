@@ -46,6 +46,16 @@ export class RegisterPage {
 
   async clickRegister(): Promise<LoginPage> {
     await this.registerButton.click();
+    // TODO wait until registration sucesss?
     return new LoginPage(this.page);
+  }
+
+  async registerUser(password: string, email: string, username: string) {
+    // TODO add step with description
+    await this.typeUsername(username);
+    await this.typePassword(password);
+    await this.typeEmail(email);
+
+    return this.clickRegister();
   }
 }

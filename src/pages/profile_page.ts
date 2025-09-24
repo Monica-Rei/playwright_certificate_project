@@ -1,4 +1,6 @@
-import { Page, Locator } from "@playwright/test";
+import { Page, Locator, expect } from "@playwright/test";
+import { DashboardPage } from "./dashboard_page.ts";
+import { User } from "../user/user.ts";
 
 export class ProfilePage {
   readonly page: Page;
@@ -52,20 +54,14 @@ export class ProfilePage {
     return this;
   }
 
-  async fillOutProfileFormAndSubmit(profileData: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    age: string;
-  }): Promise<this> {
+  async fillOutProfileFormAndSubmit(user: User) {
     await this.page.waitForLoadState("networkidle");
-    await this.fillName(profileData.firstName);
-    await this.fillSurname(profileData.lastName);
-    await this.fillEmail(profileData.email);
-    await this.fillPhone(profileData.phone);
-    await this.fillAge(profileData.age);
+    await this.fillName(user.firstName);
+    await this.fillSurname(user.lastName);
+    await this.fillEmail(user.email);
+    await this.fillPhone(user.phone);
+    await this.fillAge(user.age);
     await this.clickSaveProfile();
-    return this;
+    return new DashboardPage(this.page);
   }
 }

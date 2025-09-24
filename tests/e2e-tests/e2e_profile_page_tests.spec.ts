@@ -1,149 +1,60 @@
-import { test, expect } from "@playwright/test";
+import { test } from "@playwright/test";
 import { LoginPage } from "../../src/pages/login_page.ts";
-import { DashboardPage } from "../../src/pages/dashboard_page.ts";
-import { ProfilePage } from "../../src/pages/profile_page.ts";
-import { faker } from "@faker-js/faker";
-import { RegisterPage } from "../../src/pages/register_page.ts";
-
-const BASE_URL = "https://tegb-backend-877a0b063d29.herokuapp.com/tegb";
-
-const ballance = 10000;
-
-type UserData = {
-  username: string;
-  password: string;
-  email: string;
-};
-
-function generateUserData(): UserData {
-  return {
-    username: faker.internet.username(),
-    password: faker.internet.password(),
-    email: faker.internet.email(),
-  };
-}
-
-async function registerUser(page, userData: UserData) {
-  const loginPage = new LoginPage(page);
-  const registerPage = new RegisterPage(page);
-
-  await loginPage.openPage();
-  await loginPage.clickRegister();
-
-  await registerPage.typeUsername(userData.username);
-  await registerPage.typePassword(userData.password);
-  await registerPage.typeEmail(userData.email);
-
-  await registerPage.clickRegister();
-  await loginPage.expectSuccessMessage("Registrace úspěšná! Vítejte v TEG#B!");
-}
-
-async function loginViaApi(request, userData: UserData) {
-  const loginResponse = await request.post(`${BASE_URL}/login`, {
-    headers: { "Content-Type": "application/json" },
-    data: { username: userData.username, password: userData.password },
-  });
-
-  expect(loginResponse.status()).toBe(201);
-  const loginResponseBody = await loginResponse.json();
-  const accessToken = loginResponseBody.access_token;
-  expect(accessToken).toBeTruthy();
-  return accessToken;
-}
-
-async function createAccountViaApi(request, userData: UserData) {
-  const accessToken = await loginViaApi(request, userData);
-  const accountResponse = await request.post(`${BASE_URL}/accounts/create`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    },
-    data: {
-      startBalance: ballance,
-      type: "Test",
-    },
-  });
-  expect(accountResponse.status()).toBe(201);
-}
-
-async function loginUser(page, userData: UserData) {
-  const dashboardPage = new DashboardPage(page);
-  const loginPage = new LoginPage(page);
-
-  await loginPage.openPage();
-  await loginPage.fillUsername(userData.username);
-  await loginPage.fillPassword(userData.password);
-  await loginPage.clickLogin();
-  await dashboardPage.expectDashboardLoaded();
-}
-
-function generateProfileInformation(email: string) {
-  return {
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
-    email,
-    phone: faker.helpers.replaceSymbols("###-###-####"),
-    age: faker.number.int({ min: 18, max: 80 }).toString(),
-  };
-}
+import { UserApi } from "../../src/api/user_api.ts";
+import { User } from "../../src/user/user.ts";
 
 test.describe("Profile tests", () => {
-  let userData: UserData;
+  let testUser: User;
 
   test.beforeEach(async ({ page, request }) => {
-    userData = generateUserData();
-    await test.step("Register user via UI", async () => {
-      await registerUser(page, userData);
-    });
+    testUser = new User();
+    testUser.generateFakeData();
 
-    await test.step("Create account via API", async () => {
-      await createAccountViaApi(request, userData);
-    });
-
-    await test.step("Login user via UI", async () => {
-      await loginUser(page, userData);
-    });
-  });
-
-  test("Fill out profile and verify saved data", async ({ page }) => {
-    const profileInformation = generateProfileInformation(userData.email);
-    const profilePage = new ProfilePage(page);
-    const dashboardPage = new DashboardPage(page);
     const loginPage = new LoginPage(page);
 
-    await test.step("Open profile settings", async () => {
-      await dashboardPage.openProfileSetting();
-    });
+    // register user
+    await loginPage
+      .openPage()
+      .then((loginPage) => loginPage.clickRegister())
+      .then((registerPage) =>
+        registerPage.registerUser(
+          testUser.password,
+          testUser.email,
+          testUser.username
+        )
+      )
+      .then((loginPage) =>
+        // TODO add text in map const
+        loginPage.expectSuccessMessage("Registrace úspěšná! Vítejte v TEG#B!")
+      );
 
-    await test.step("Fill out and submit profile form", async () => {
-      await profilePage.fillOutProfileFormAndSubmit(profileInformation);
-    });
+    // create account via
+    const userApi = new UserApi(request);
+    await userApi
+      .loginViaApi(testUser.username, testUser.password)
+      .then((userApi) => {
+        userApi.createAccountViaApi(testUser.accountBallance);
+      });
+  });
 
-    await test.step("Verify saved profile data", async () => {
-      await expect(dashboardPage.profileName).toContainText(
-        profileInformation.firstName
-      );
-      await expect(dashboardPage.profileSurname).toContainText(
-        profileInformation.lastName
-      );
-      await expect(dashboardPage.profileEmail).toContainText(
-        profileInformation.email
-      );
-      await expect(dashboardPage.profilePhone).toContainText(
-        profileInformation.phone
-      );
-      await expect(dashboardPage.profileAge).toContainText(
-        profileInformation.age
-      );
-    });
+  test("Should fill out profile, save data, and verify account balance", async ({
+    page,
+  }) => {
+    const loginPage = new LoginPage(page);
 
-    await test.step("Check account creation and balance", async () => {
-      await dashboardPage.checkAccountCreated();
-      await dashboardPage.checkFirstAccountBalance(ballance);
-    });
-
-    await test.step("Logout user", async () => {
-      await dashboardPage.clickLogout();
-    });
+    await loginPage
+      .openPage()
+      .then((loginPage) =>
+        loginPage.loginUser(testUser.username, testUser.password)
+      )
+      .then((dashboardPage) => dashboardPage.verifyDashboardLoaded())
+      .then((dashboardPage) => dashboardPage.openProfileSetting())
+      .then((profilePage) => profilePage.fillOutProfileFormAndSubmit(testUser))
+      .then((dashboardPage) => dashboardPage.verifySavedProfileData(testUser))
+      .then((dashboardPage) => dashboardPage.checkAccountCreated())
+      .then((dashboardPage) =>
+        dashboardPage.checkFirstAccountBalance(testUser.accountBallance)
+      )
+      .then((dashboardPage) => dashboardPage.clickLogout());
   });
 });

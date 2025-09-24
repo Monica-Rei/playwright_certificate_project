@@ -27,7 +27,7 @@ export class LoginPage {
     return this;
   }
 
-  async clickRegister(): Promise<RegisterPage> {
+  async clickRegister() {
     await this.registerButton.click();
     return new RegisterPage(this.page);
   }
@@ -50,5 +50,12 @@ export class LoginPage {
   async expectSuccessMessage(expectedText: string): Promise<this> {
     await expect(this.successMessage).toContainText(expectedText);
     return this;
+  }
+
+  async loginUser(username: string, password: string) {
+    await this.openPage();
+    await this.fillUsername(username);
+    await this.fillPassword(password);
+    return await this.clickLogin();
   }
 }

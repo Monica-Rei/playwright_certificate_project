@@ -26,6 +26,9 @@ export class DashboardPage {
   readonly accountTypeHeader: Locator;
   readonly addAccountButton: Locator;
   readonly profileDetailsTitle: Locator;
+  readonly accountNumber: Locator;
+  readonly accountBalance: Locator;
+  readonly accountType: Locator;
 
   //constructor
   constructor(page: Page) {
@@ -71,10 +74,30 @@ export class DashboardPage {
     this.profileDetailsTitle = this.page.locator(
       "//div[@data-testid='account-summary']"
     );
+    this.accountNumber = this.page.locator(
+      "//tr[@data-testid='account-row-0']//td[@data-testid='account-number']"
+    );
+    this.accountBalance = this.page.locator(
+      "//tr[@data-testid='account-row-0']//td[@data-testid='account-balance']"
+    );
+    this.accountType = this.page.locator(
+      "//tr[@data-testid='account-row-0']//td[@data-testid='account-type']"
+    );
   }
 
-  async expectDashboardLoaded(): Promise<this> {
+  async verifyDashboardLoaded(): Promise<this> {
     await expect(this.header).toContainText("Dashboard");
+    return this;
+  }
+
+  async verifySavedProfileData(profileInformation: any): Promise<this> {
+    await expect(this.profileName).toContainText(profileInformation.firstName);
+    await expect(this.profileSurname).toContainText(
+      profileInformation.lastName
+    );
+    await expect(this.profileEmail).toContainText(profileInformation.email);
+    await expect(this.profilePhone).toContainText(profileInformation.phone);
+    await expect(this.profileAge).toContainText(profileInformation.age);
     return this;
   }
 
@@ -93,6 +116,7 @@ export class DashboardPage {
     await expect(this.firstAccountBalance).toContainText(formattedBalance);
     return this;
   }
+
   async clickLogout(): Promise<LoginPage> {
     await this.logoutButton.click();
     return new LoginPage(this.page);
@@ -108,4 +132,27 @@ export class DashboardPage {
     await this.addAccountButton.click();
     return new AccountPage(this.page);
   }*/
+
+  //DATA DRIVEN
+  async accountNumberHaveText(accountNumber: number): Promise<this> {
+    await expect
+      .soft(this.accountNumber, "Account Number have Text")
+      .toHaveText(accountNumber.toString());
+    return this;
+  }
+
+  async accountBalanceHaveText(accountBalance: number): Promise<this> {
+    const formattedBalance = accountBalance.toFixed(2); // převede 10000 -> "10000.00"
+    await expect
+      .soft(this.accountBalance, "Account Balance have Text")
+      .toHaveText(formattedBalance);
+    return this;
+  }
+
+  async accountTypeHaveText(accountType: string): Promise<this> {
+    await expect
+      .soft(this.accountType, "Account Type have Text")
+      .toHaveText(accountType);
+    return this;
+  }
 }

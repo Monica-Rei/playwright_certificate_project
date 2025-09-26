@@ -1,7 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { LoginPage } from "../../src/pages/login_page.ts";
 import { DashboardPage } from "../../src/pages/dashboard_page.ts";
-import { ProfilePage } from "../../src/pages/profile_page.ts";
 
 test.describe("Atomic Tests: Check Dashboard Page", () => {
   test.beforeEach(async ({ page }) => {
@@ -100,7 +99,7 @@ test.describe("Atomic Tests: Check Dashboard Page", () => {
     const dashboardPage = new DashboardPage(page);
 
     await expect(dashboardPage.profileButton).toBeVisible();
-    await expect(dashboardPage.profileButton).toHaveText("Upravit profil");
+    await expect(dashboardPage.profileButton).toHaveText("Upravit profil"); // TODO move to vocabulary
 
     const profilePage = await dashboardPage.openProfileSetting();
     await expect(profilePage.nameInput).toBeVisible(); // sanity check

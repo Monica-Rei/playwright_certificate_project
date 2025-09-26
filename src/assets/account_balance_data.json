@@ -1,0 +1,22 @@
+[
+  {
+    "description": "Account with 0 balance",
+    "balance": 0
+  },
+  {
+    "description": "Account with 200 000,52 balance",
+    "balance": 200000.52
+  },
+  {
+    "description": "Account with - 12 345 balance",
+    "balance": -12345
+  },
+  {
+    "description": "Account with - 196 000 921 balance",
+    "balance": -196000921
+  },
+  {
+    "description": "Account with 298 000 123 balance",
+    "balance": 298000123
+  }
+]

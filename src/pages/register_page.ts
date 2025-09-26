@@ -46,7 +46,6 @@ export class RegisterPage {
 
   async clickRegister(): Promise<LoginPage> {
     await this.registerButton.click();
-    // TODO wait until registration sucesss?
     return new LoginPage(this.page);
   }
 
@@ -55,7 +54,9 @@ export class RegisterPage {
     await this.typeUsername(username);
     await this.typePassword(password);
     await this.typeEmail(email);
-
-    return this.clickRegister();
+    return this.clickRegister().then((loginPage) =>
+      // TODO add text to strings map
+      loginPage.expectSuccessMessage("Registrace úspěšná! Vítejte v TEG#B!")
+    );
   }
 }

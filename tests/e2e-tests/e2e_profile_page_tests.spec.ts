@@ -3,7 +3,7 @@ import { LoginPage } from "../../src/pages/login_page.ts";
 import { UserApi } from "../../src/api/user_api.ts";
 import { User } from "../../src/user/user.ts";
 
-test.describe("Profile tests", () => {
+test.describe("Profile E2E tests", () => {
   let testUser: User;
 
   test.beforeEach(async ({ page, request }) => {
@@ -22,18 +22,14 @@ test.describe("Profile tests", () => {
           testUser.email,
           testUser.username
         )
-      )
-      .then((loginPage) =>
-        // TODO add text in map const
-        loginPage.expectSuccessMessage("Registrace úspěšná! Vítejte v TEG#B!")
       );
 
     // create account via
     const userApi = new UserApi(request);
     await userApi
-      .loginViaApi(testUser.username, testUser.password)
+      .login(testUser.username, testUser.password)
       .then((userApi) => {
-        userApi.createAccountViaApi(testUser.accountBallance);
+        userApi.createAccount(testUser.accountBalance);
       });
   });
 
@@ -53,8 +49,8 @@ test.describe("Profile tests", () => {
       .then((dashboardPage) => dashboardPage.verifySavedProfileData(testUser))
       .then((dashboardPage) => dashboardPage.checkAccountCreated())
       .then((dashboardPage) =>
-        dashboardPage.checkFirstAccountBalance(testUser.accountBallance)
+        dashboardPage.checkFirstAccountBalance(testUser.accountBalance)
       )
-      .then((dashboardPage) => dashboardPage.clickLogout());
+      .then((dashboardPage) => dashboardPage.logout());
   });
 });

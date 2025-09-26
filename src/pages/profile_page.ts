@@ -41,7 +41,6 @@ export class ProfilePage {
   async fillPhone(phone: string): Promise<this> {
     await this.phoneInput.fill(phone);
     return this;
-    return this;
   }
 
   async fillAge(age: string): Promise<this> {

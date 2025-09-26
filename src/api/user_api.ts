@@ -1,19 +1,4 @@
 import { APIRequestContext, APIResponse, expect } from "@playwright/test";
-import { faker } from "@faker-js/faker";
-
-type UserData = {
-  username: string;
-  password: string;
-  email: string;
-};
-
-function generateUserData(): UserData {
-  return {
-    username: faker.internet.username(),
-    password: faker.internet.password(),
-    email: faker.internet.email(),
-  };
-}
 
 export class UserApi {
   readonly request: APIRequestContext;
@@ -21,29 +6,49 @@ export class UserApi {
   accessToken: string;
   username: string;
   userPassword: string;
+  loginResponse: APIResponse;
+  registerResponse: APIResponse;
+  createAccountResponse: APIResponse;
 
   constructor(request: APIRequestContext) {
     this.request = request;
   }
 
-  async loginViaApi(username: string, password: string) {
+  async register(email: string, username: string, password: string) {
+    const registerResponse = await this.request.post(
+      `${this.apiUrl}/register`,
+      {
+        headers: { "Content-Type": "application/json" },
+        data: { email, username, password },
+      }
+    );
+    this.registerResponse = registerResponse;
+
+    await expect(registerResponse.status()).toBe(201);
+    this.username = username;
+    this.userPassword = password;
+    return this;
+  }
+
+  async login(username: string, password: string) {
     const loginResponse = await this.request.post(`${this.apiUrl}/login`, {
       headers: { "Content-Type": "application/json" },
       data: { username, password },
     });
+    this.loginResponse = loginResponse;
 
-    expect(loginResponse.status()).toBe(201);
+    await expect(loginResponse.status()).toBe(201);
     const loginResponseBody = await loginResponse.json();
     const accessToken = loginResponseBody.access_token;
-    expect(accessToken).toBeTruthy();
+    await expect(accessToken).toBeTruthy();
     this.accessToken = accessToken;
     this.username = username;
     this.userPassword = password;
     return this;
   }
 
-  async createAccountViaApi(startBalance: number) {
-    const accountResponse = await this.request.post(
+  async createAccount(startBalance: number) {
+    const createAccountResponse = await this.request.post(
       `${this.apiUrl}/accounts/create`,
       {
         headers: {
@@ -56,7 +61,9 @@ export class UserApi {
         },
       }
     );
-    expect(accountResponse.status()).toBe(201);
+    this.createAccountResponse = createAccountResponse;
+
+    await expect(createAccountResponse.status()).toBe(201);
     return this;
   }
 }

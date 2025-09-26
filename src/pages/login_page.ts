@@ -27,6 +27,14 @@ export class LoginPage {
     return this;
   }
 
+  async verifyOnLoginPage(): Promise<this> {
+    await expect(this.page).toHaveURL(this.url);
+    await expect(this.usernameInput).toBeVisible();
+    await expect(this.passwordInput).toBeVisible();
+    await expect(this.loginButton).toBeVisible();
+    return this;
+  }
+
   async clickRegister() {
     await this.registerButton.click();
     return new RegisterPage(this.page);
@@ -53,9 +61,10 @@ export class LoginPage {
   }
 
   async loginUser(username: string, password: string) {
-    await this.openPage();
     await this.fillUsername(username);
     await this.fillPassword(password);
-    return await this.clickLogin();
+    return await this.clickLogin().then((dashboardPage) =>
+      dashboardPage.verifyDashboardLoaded()
+    );
   }
 }

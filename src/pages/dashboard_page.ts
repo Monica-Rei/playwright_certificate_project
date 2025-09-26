@@ -86,6 +86,7 @@ export class DashboardPage {
   }
 
   async verifyDashboardLoaded(): Promise<this> {
+    await this.page.waitForLoadState("networkidle");
     await expect(this.header).toContainText("Dashboard");
     return this;
   }
@@ -112,7 +113,7 @@ export class DashboardPage {
   }
 
   async checkFirstAccountBalance(expectedBalance: number): Promise<this> {
-    const formattedBalance = expectedBalance.toFixed(2); // převede 10000 -> "10000.00"
+    const formattedBalance = expectedBalance.toFixed(2); // converts 10000 -> "10000.00"
     await expect(this.firstAccountBalance).toContainText(formattedBalance);
     return this;
   }
@@ -126,33 +127,10 @@ export class DashboardPage {
     await this.addAccountButton.click();
     return this;
   }
-  /*tlacitko nefunguje, proto jsem tam dala <this> ... pokud by fungovalo, test by byl takhle
 
-  async clickAddAccount(): Promise<AccountPage> {
-    await this.addAccountButton.click();
-    return new AccountPage(this.page);
-  }*/
-
-  //DATA DRIVEN
-  async accountNumberHaveText(accountNumber: number): Promise<this> {
-    await expect
-      .soft(this.accountNumber, "Account Number have Text")
-      .toHaveText(accountNumber.toString());
-    return this;
-  }
-
-  async accountBalanceHaveText(accountBalance: number): Promise<this> {
-    const formattedBalance = accountBalance.toFixed(2); // převede 10000 -> "10000.00"
-    await expect
-      .soft(this.accountBalance, "Account Balance have Text")
-      .toHaveText(formattedBalance);
-    return this;
-  }
-
-  async accountTypeHaveText(accountType: string): Promise<this> {
-    await expect
-      .soft(this.accountType, "Account Type have Text")
-      .toHaveText(accountType);
-    return this;
+  async logout(): Promise<LoginPage> {
+    return await this.clickLogout().then((loginPage) =>
+      loginPage.verifyOnLoginPage()
+    );
   }
 }

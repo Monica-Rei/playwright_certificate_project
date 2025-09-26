@@ -4,7 +4,7 @@ export class User {
   username: string;
   password: string;
   email: string;
-  accountBallance: number;
+  accountBalance: number;
   firstName: string;
   lastName: string;
   phone: string;
@@ -16,7 +16,7 @@ export class User {
     this.username = faker.internet.username();
     this.password = faker.internet.password();
     this.email = faker.internet.email();
-    this.accountBallance = 10000;
+    this.accountBalance = 10000;
     this.firstName = faker.person.firstName();
     this.lastName = faker.person.lastName();
     this.phone = faker.helpers.replaceSymbols("###-###-####");

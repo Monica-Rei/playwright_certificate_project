@@ -2,7 +2,7 @@ import test, { APIRequestContext, APIResponse, expect } from "@playwright/test";
 
 export class UserApi {
   readonly request: APIRequestContext;
-  readonly apiUrl = "https://tegb-backend-877a0b063d29.herokuapp.com/tegb";
+  readonly apiUrl = process.env.USER_API_BASE_URL;
   accessToken: string;
   username: string;
   userPassword: string;

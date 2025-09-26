@@ -7,11 +7,12 @@ test.describe("Atomic Tests: Check Dashboard Page", () => {
     const loginPage = new LoginPage(page);
     await loginPage
       .openPage()
-      .then((login) => login.fillUsername("user1"))
-      .then((login) => login.fillPassword("user1"))
-      .then((login) => login.clickLogin());
-    const dashboardPage = new DashboardPage(page);
-    await expect(dashboardPage.header).toBeVisible();
+      .then((loginPage) =>
+        loginPage.loginUser(
+          process.env.TEST_ACCOUNT_USERNAME,
+          process.env.TEST_ACCOUNT_PASSWORD,
+        ),
+      );
   });
 
   test("Modal Structure Tests", async ({ page }) => {

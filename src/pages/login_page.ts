@@ -4,7 +4,7 @@ import { DashboardPage } from "./dashboard_page.ts";
 
 export class LoginPage {
   readonly page: Page;
-  readonly url = "https://tegb-frontend-88542200c6db.herokuapp.com/";
+  readonly url = process.env.APP_BASE_URL;
   readonly usernameInput: Locator;
   readonly passwordInput: Locator;
   readonly loginButton: Locator;

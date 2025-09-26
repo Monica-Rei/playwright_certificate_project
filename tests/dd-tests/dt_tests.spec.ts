@@ -43,9 +43,9 @@ test.describe("Data Driven Tests", () => {
           loginPage.loginUser(testUser.username, testUser.password),
         )
         .then((dashboardPage) => dashboardPage.verifyDashboardLoaded())
-        .then((dashboardPage) => dashboardPage.checkAccountCreated())
+        .then((dashboardPage) => dashboardPage.verifyAccountCreated())
         .then((dashboardPage) =>
-          dashboardPage.checkFirstAccountBalance(testUser.accountBalance),
+          dashboardPage.verifyFirstAccountBalance(testUser.accountBalance),
         )
         .then((dashboardPage) => dashboardPage.logout());
     });

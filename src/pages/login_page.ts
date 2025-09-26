@@ -1,4 +1,4 @@
-import { expect, Locator, Page } from "@playwright/test";
+import test, { expect, Locator, Page } from "@playwright/test";
 import { RegisterPage } from "./register_page";
 import { DashboardPage } from "./dashboard_page.ts";
 
@@ -23,19 +23,13 @@ export class LoginPage {
   }
 
   async openPage(): Promise<this> {
-    await this.page.goto(this.url);
+    await test.step("Open login page", async () => {
+      await this.page.goto(this.url);
+    });
     return this;
   }
 
-  async verifyOnLoginPage(): Promise<this> {
-    await expect(this.page).toHaveURL(this.url);
-    await expect(this.usernameInput).toBeVisible();
-    await expect(this.passwordInput).toBeVisible();
-    await expect(this.loginButton).toBeVisible();
-    return this;
-  }
-
-  async clickRegister() {
+  async clickRegister(): Promise<RegisterPage> {
     await this.registerButton.click();
     return new RegisterPage(this.page);
   }
@@ -60,11 +54,24 @@ export class LoginPage {
     return this;
   }
 
-  async loginUser(username: string, password: string) {
-    await this.fillUsername(username);
-    await this.fillPassword(password);
-    return await this.clickLogin().then((dashboardPage) =>
-      dashboardPage.verifyDashboardLoaded(),
-    );
+  async loginUser(username: string, password: string): Promise<DashboardPage> {
+    return await test.step("Login user", async () => {
+      await this.fillUsername(username);
+      await this.fillPassword(password);
+
+      return await this.clickLogin().then((dashboardPage) =>
+        dashboardPage.verifyDashboardLoaded(),
+      );
+    });
+  }
+
+  async verifyOnLoginPage(): Promise<this> {
+    await test.step("Verify on Login Page", async () => {
+      await expect(this.page).toHaveURL(this.url);
+      await expect(this.usernameInput).toBeVisible();
+      await expect(this.passwordInput).toBeVisible();
+      await expect(this.loginButton).toBeVisible();
+    });
+    return this;
   }
 }

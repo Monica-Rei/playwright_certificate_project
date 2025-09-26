@@ -1,4 +1,4 @@
-import { Page, Locator } from "@playwright/test";
+import test, { Page, Locator } from "@playwright/test";
 import { LoginPage } from "./login_page";
 
 export class RegisterPage {
@@ -49,14 +49,19 @@ export class RegisterPage {
     return new LoginPage(this.page);
   }
 
-  async registerUser(password: string, email: string, username: string) {
-    // TODO add step with description
-    await this.typeUsername(username);
-    await this.typePassword(password);
-    await this.typeEmail(email);
-    return this.clickRegister().then((loginPage) =>
-      // TODO add text to strings map
-      loginPage.expectSuccessMessage("Registrace úspěšná! Vítejte v TEG#B!"),
-    );
+  async registerUser(
+    password: string,
+    email: string,
+    username: string,
+  ): Promise<LoginPage> {
+    return await test.step("Register a new user", async () => {
+      await this.typeUsername(username);
+      await this.typePassword(password);
+      await this.typeEmail(email);
+      return this.clickRegister().then((loginPage) =>
+        // TODO add text to strings map
+        loginPage.expectSuccessMessage("Registrace úspěšná! Vítejte v TEG#B!"),
+      );
+    });
   }
 }

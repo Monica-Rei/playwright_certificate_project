@@ -1,4 +1,4 @@
-import { Page, Locator } from "@playwright/test";
+import test, { Page, Locator } from "@playwright/test";
 import { DashboardPage } from "./dashboard_page.ts";
 import { User } from "../user/user.ts";
 
@@ -54,13 +54,17 @@ export class ProfilePage {
   }
 
   async fillOutProfileFormAndSubmit(user: User) {
-    await this.page.waitForLoadState("networkidle");
-    await this.fillName(user.firstName);
-    await this.fillSurname(user.lastName);
-    await this.fillEmail(user.email);
-    await this.fillPhone(user.phone);
-    await this.fillAge(user.age);
-    await this.clickSaveProfile();
+    await test.step("Fill out and submit profile form", async () => {
+      // waiting here ensures API responses don't overwrite test-filled fields
+      await this.page.waitForLoadState("networkidle");
+
+      await this.fillName(user.firstName);
+      await this.fillSurname(user.lastName);
+      await this.fillEmail(user.email);
+      await this.fillPhone(user.phone);
+      await this.fillAge(user.age);
+      await this.clickSaveProfile();
+    });
     return new DashboardPage(this.page);
   }
 }

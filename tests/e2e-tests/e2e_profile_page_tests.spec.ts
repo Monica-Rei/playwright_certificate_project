@@ -47,9 +47,9 @@ test.describe("Profile E2E tests", () => {
       .then((dashboardPage) => dashboardPage.openProfileSetting())
       .then((profilePage) => profilePage.fillOutProfileFormAndSubmit(testUser))
       .then((dashboardPage) => dashboardPage.verifySavedProfileData(testUser))
-      .then((dashboardPage) => dashboardPage.checkAccountCreated())
+      .then((dashboardPage) => dashboardPage.verifyAccountCreated())
       .then((dashboardPage) =>
-        dashboardPage.checkFirstAccountBalance(testUser.accountBalance),
+        dashboardPage.verifyFirstAccountBalance(testUser.accountBalance),
       )
       .then((dashboardPage) => dashboardPage.logout());
   });

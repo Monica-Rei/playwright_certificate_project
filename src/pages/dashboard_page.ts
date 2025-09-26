@@ -1,4 +1,4 @@
-import { expect, Locator, Page } from "@playwright/test";
+import test, { expect, Locator, Page } from "@playwright/test";
 import { ProfilePage } from "./profile_page.ts";
 import { LoginPage } from "./login_page.ts";
 
@@ -85,43 +85,9 @@ export class DashboardPage {
     );
   }
 
-  async verifyDashboardLoaded(): Promise<this> {
-    await this.page.waitForLoadState("networkidle");
-    await expect(this.header).toContainText("Dashboard");
-    return this;
-  }
-
-  async verifySavedProfileData(profileInformation: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    age: string;
-  }): Promise<this> {
-    await expect(this.profileName).toContainText(profileInformation.firstName);
-    await expect(this.profileSurname).toContainText(
-      profileInformation.lastName,
-    );
-    await expect(this.profileEmail).toContainText(profileInformation.email);
-    await expect(this.profilePhone).toContainText(profileInformation.phone);
-    await expect(this.profileAge).toContainText(profileInformation.age);
-    return this;
-  }
-
   async openProfileSetting(): Promise<ProfilePage> {
     await this.profileButton.click();
     return new ProfilePage(this.page);
-  }
-
-  async checkAccountCreated(): Promise<this> {
-    await expect(this.firstAccount).toBeVisible();
-    return this;
-  }
-
-  async checkFirstAccountBalance(expectedBalance: number): Promise<this> {
-    const formattedBalance = expectedBalance.toFixed(2); // converts 10000 -> "10000.00"
-    await expect(this.firstAccountBalance).toContainText(formattedBalance);
-    return this;
   }
 
   async clickLogout(): Promise<LoginPage> {
@@ -135,8 +101,54 @@ export class DashboardPage {
   }
 
   async logout(): Promise<LoginPage> {
-    return await this.clickLogout().then((loginPage) =>
-      loginPage.verifyOnLoginPage(),
-    );
+    return await test.step("Logout", async () => {
+      return await this.clickLogout().then((loginPage) =>
+        loginPage.verifyOnLoginPage(),
+      );
+    });
+  }
+
+  async verifyAccountCreated(): Promise<this> {
+    await test.step("Verify account is created", async () => {
+      await expect(this.firstAccount).toBeVisible();
+    });
+    return this;
+  }
+
+  async verifyFirstAccountBalance(expectedBalance: number): Promise<this> {
+    await test.step("Verify first account balance", async () => {
+      const formattedBalance = expectedBalance.toFixed(2); // converts 10000 -> "10000.00"
+      await expect(this.firstAccountBalance).toContainText(formattedBalance);
+    });
+    return this;
+  }
+
+  async verifyDashboardLoaded(): Promise<this> {
+    await test.step("Verify dashboard loaded", async () => {
+      await this.page.waitForLoadState("networkidle");
+      await expect(this.header).toContainText("Dashboard");
+    });
+    return this;
+  }
+
+  async verifySavedProfileData(profileInformation: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    age: string;
+  }): Promise<this> {
+    await test.step("Verify saved profile data", async () => {
+      await expect(this.profileName).toContainText(
+        profileInformation.firstName,
+      );
+      await expect(this.profileSurname).toContainText(
+        profileInformation.lastName,
+      );
+      await expect(this.profileEmail).toContainText(profileInformation.email);
+      await expect(this.profilePhone).toContainText(profileInformation.phone);
+      await expect(this.profileAge).toContainText(profileInformation.age);
+    });
+    return this;
   }
 }

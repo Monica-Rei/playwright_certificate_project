@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "prepare": "husky",
+    "format": "prettier --write --ignore-unknown ."
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Monica-Rei/playwright_certificate_project.git"
@@ -19,6 +22,11 @@
     "@faker-js/faker": "^10.0.0",
     "@playwright/test": "^1.55.0",
     "@types/node": "^24.3.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.1",
     "prettier": "3.6.2"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
   }
 }

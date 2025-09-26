@@ -16,10 +16,10 @@ export class RegisterPage {
     this.passwordInput = page.locator("//input[@data-testid='password-input']");
     this.emailInput = page.locator("//input[@data-testid='email-input']");
     this.backButton = page.locator(
-      "//div[@class='buttons-box']//button[@class='link-button']"
+      "//div[@class='buttons-box']//button[@class='link-button']",
     );
     this.registerButton = page.locator(
-      "//div[@class='buttons-box']//button[@data-testid='submit-button']"
+      "//div[@class='buttons-box']//button[@data-testid='submit-button']",
     );
   }
 
@@ -56,7 +56,7 @@ export class RegisterPage {
     await this.typeEmail(email);
     return this.clickRegister().then((loginPage) =>
       // TODO add text to strings map
-      loginPage.expectSuccessMessage("Registrace úspěšná! Vítejte v TEG#B!")
+      loginPage.expectSuccessMessage("Registrace úspěšná! Vítejte v TEG#B!"),
     );
   }
 }

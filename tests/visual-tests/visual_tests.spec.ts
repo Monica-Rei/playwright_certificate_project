@@ -19,26 +19,26 @@ test.describe("Visual Tests: Check Profile Section", () => {
     const dashboardPage = new DashboardPage(page);
 
     await expect(dashboardPage.profileDetailsTitle).toHaveScreenshot(
-      "div_test.png"
+      "div_test.png",
     );
 
     await expect(dashboardPage.profileName).toHaveScreenshot(
-      "input_name_test.png"
+      "input_name_test.png",
     );
     await expect(dashboardPage.profileSurname).toHaveScreenshot(
-      "input_surname_test.png"
+      "input_surname_test.png",
     );
     await expect(dashboardPage.profileEmail).toHaveScreenshot(
-      "input_email_test.png"
+      "input_email_test.png",
     );
     await expect(dashboardPage.profilePhone).toHaveScreenshot(
-      "input_phone_test.png"
+      "input_phone_test.png",
     );
     await expect(dashboardPage.profileAge).toHaveScreenshot(
-      "input_age_test.png"
+      "input_age_test.png",
     );
     await expect(dashboardPage.profileHeader).toHaveScreenshot(
-      "profile_header_test.png"
+      "profile_header_test.png",
     );
   });
 });

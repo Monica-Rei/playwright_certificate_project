@@ -15,7 +15,7 @@ export class ProfilePage {
     this.page = page;
     this.nameInput = page.locator("//input[@data-testid='chage-name-input']");
     this.surnameInput = page.locator(
-      "//input[@data-testid='chage-surname-input']"
+      "//input[@data-testid='chage-surname-input']",
     );
     this.emailInput = page.locator("//input[@data-testid='chage-email-input']");
     this.phoneInput = page.locator("//input[@data-testid='chage-phone-input']");

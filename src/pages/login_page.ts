@@ -17,7 +17,7 @@ export class LoginPage {
     this.passwordInput = page.locator("//input[@data-testid='password-input']");
     this.loginButton = page.locator("//button[@data-testid='submit-button']");
     this.registerButton = page.locator(
-      "//button[@data-testid='register-button']"
+      "//button[@data-testid='register-button']",
     );
     this.successMessage = page.locator("//div[@class='success-message']");
   }
@@ -64,7 +64,7 @@ export class LoginPage {
     await this.fillUsername(username);
     await this.fillPassword(password);
     return await this.clickLogin().then((dashboardPage) =>
-      dashboardPage.verifyDashboardLoaded()
+      dashboardPage.verifyDashboardLoaded(),
     );
   }
 }

@@ -24,8 +24,8 @@ test.describe("Data Driven Tests", () => {
           registerPage.registerUser(
             testUser.password,
             testUser.email,
-            testUser.username
-          )
+            testUser.username,
+          ),
         );
 
       // create account via for registered user
@@ -40,12 +40,12 @@ test.describe("Data Driven Tests", () => {
       await loginPage
         .openPage()
         .then((loginPage) =>
-          loginPage.loginUser(testUser.username, testUser.password)
+          loginPage.loginUser(testUser.username, testUser.password),
         )
         .then((dashboardPage) => dashboardPage.verifyDashboardLoaded())
         .then((dashboardPage) => dashboardPage.checkAccountCreated())
         .then((dashboardPage) =>
-          dashboardPage.checkFirstAccountBalance(testUser.accountBalance)
+          dashboardPage.checkFirstAccountBalance(testUser.accountBalance),
         )
         .then((dashboardPage) => dashboardPage.logout());
     });

@@ -20,7 +20,7 @@ export class UserApi {
       {
         headers: { "Content-Type": "application/json" },
         data: { email, username, password },
-      }
+      },
     );
     this.registerResponse = registerResponse;
 
@@ -59,7 +59,7 @@ export class UserApi {
           startBalance: startBalance,
           type: "Test",
         },
-      }
+      },
     );
     this.createAccountResponse = createAccountResponse;
 

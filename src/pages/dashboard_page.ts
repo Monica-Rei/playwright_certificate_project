@@ -35,12 +35,12 @@ export class DashboardPage {
     this.page = page;
     this.header = this.page.locator("//span[@class='app-title']");
     this.profileButton = this.page.locator(
-      "//button[@data-testid='toggle-edit-profile-button']"
+      "//button[@data-testid='toggle-edit-profile-button']",
     );
     //upravit xpath aby tam nebylo 0 ???
     this.firstAccount = this.page.locator("//tr[@data-testid='account-row-0']");
     this.firstAccountBalance = this.page.locator(
-      "//tr[@data-testid='account-row-0']//td[@data-testid='account-balance']"
+      "//tr[@data-testid='account-row-0']//td[@data-testid='account-balance']",
     );
     this.profileName = this.page.locator("//div[@data-testid='name']");
     this.profileSurname = this.page.locator("//div[@data-testid='surname']");
@@ -54,34 +54,34 @@ export class DashboardPage {
     this.transactionsMenu = this.page.locator("//nav//ul//li[3]");
     this.supportMenu = this.page.locator("//nav//ul//li[4]");
     this.profileHeader = this.page.locator(
-      "//h2[@data-testid='profile-details-title']"
+      "//h2[@data-testid='profile-details-title']",
     );
     this.accountsHeader = this.page.locator(
-      "//h2[@data-testid='accounts-title']"
+      "//h2[@data-testid='accounts-title']",
     );
     this.accountNumberHeader = this.page.locator(
-      "//tr[@class='account-heading']//th[@data-testid='account-number-heading']"
+      "//tr[@class='account-heading']//th[@data-testid='account-number-heading']",
     );
     this.balanceHeader = this.page.locator(
-      "//tr[@class='account-heading']//th[@data-testid='account-balance-heading']"
+      "//tr[@class='account-heading']//th[@data-testid='account-balance-heading']",
     );
     this.accountTypeHeader = this.page.locator(
-      "//tr[@class='account-heading']//th[@data-testid='account-type-heading']"
+      "//tr[@class='account-heading']//th[@data-testid='account-type-heading']",
     );
     this.addAccountButton = this.page.locator(
-      "//button[@class='account-action']"
+      "//button[@class='account-action']",
     );
     this.profileDetailsTitle = this.page.locator(
-      "//div[@data-testid='account-summary']"
+      "//div[@data-testid='account-summary']",
     );
     this.accountNumber = this.page.locator(
-      "//tr[@data-testid='account-row-0']//td[@data-testid='account-number']"
+      "//tr[@data-testid='account-row-0']//td[@data-testid='account-number']",
     );
     this.accountBalance = this.page.locator(
-      "//tr[@data-testid='account-row-0']//td[@data-testid='account-balance']"
+      "//tr[@data-testid='account-row-0']//td[@data-testid='account-balance']",
     );
     this.accountType = this.page.locator(
-      "//tr[@data-testid='account-row-0']//td[@data-testid='account-type']"
+      "//tr[@data-testid='account-row-0']//td[@data-testid='account-type']",
     );
   }
 
@@ -94,7 +94,7 @@ export class DashboardPage {
   async verifySavedProfileData(profileInformation: any): Promise<this> {
     await expect(this.profileName).toContainText(profileInformation.firstName);
     await expect(this.profileSurname).toContainText(
-      profileInformation.lastName
+      profileInformation.lastName,
     );
     await expect(this.profileEmail).toContainText(profileInformation.email);
     await expect(this.profilePhone).toContainText(profileInformation.phone);
@@ -130,7 +130,7 @@ export class DashboardPage {
 
   async logout(): Promise<LoginPage> {
     return await this.clickLogout().then((loginPage) =>
-      loginPage.verifyOnLoginPage()
+      loginPage.verifyOnLoginPage(),
     );
   }
 }

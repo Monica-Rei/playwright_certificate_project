@@ -20,8 +20,8 @@ test.describe("Profile E2E tests", () => {
         registerPage.registerUser(
           testUser.password,
           testUser.email,
-          testUser.username
-        )
+          testUser.username,
+        ),
       );
 
     // create account via
@@ -41,7 +41,7 @@ test.describe("Profile E2E tests", () => {
     await loginPage
       .openPage()
       .then((loginPage) =>
-        loginPage.loginUser(testUser.username, testUser.password)
+        loginPage.loginUser(testUser.username, testUser.password),
       )
       .then((dashboardPage) => dashboardPage.verifyDashboardLoaded())
       .then((dashboardPage) => dashboardPage.openProfileSetting())
@@ -49,7 +49,7 @@ test.describe("Profile E2E tests", () => {
       .then((dashboardPage) => dashboardPage.verifySavedProfileData(testUser))
       .then((dashboardPage) => dashboardPage.checkAccountCreated())
       .then((dashboardPage) =>
-        dashboardPage.checkFirstAccountBalance(testUser.accountBalance)
+        dashboardPage.checkFirstAccountBalance(testUser.accountBalance),
       )
       .then((dashboardPage) => dashboardPage.logout());
   });

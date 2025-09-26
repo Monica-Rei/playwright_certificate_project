@@ -11,6 +11,6 @@ test("API user login test", async ({ request }) => {
     .register(testUser.email, testUser.username, testUser.password)
     .then((userApi) => userApi.login(testUser.username, testUser.password));
 
-  await expect(userApi.loginResponse.status()).toBe(201);
-  await expect(userApi.accessToken).toBeTruthy();
+  expect(userApi.loginResponse.status()).toBe(201);
+  expect(userApi.accessToken).toBeTruthy();
 });

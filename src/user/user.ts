@@ -10,8 +10,6 @@ export class User {
   phone: string;
   age: string;
 
-  constructor() {}
-
   public generateFakeData() {
     this.username = faker.internet.username();
     this.password = faker.internet.password();

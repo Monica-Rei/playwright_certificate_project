@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from "@playwright/test";
+import { Page, Locator } from "@playwright/test";
 import { DashboardPage } from "./dashboard_page.ts";
 import { User } from "../user/user.ts";
 

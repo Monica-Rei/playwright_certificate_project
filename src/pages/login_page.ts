@@ -1,4 +1,4 @@
-import { expect, Locator, Page, test } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 import { RegisterPage } from "./register_page";
 import { DashboardPage } from "./dashboard_page.ts";
 

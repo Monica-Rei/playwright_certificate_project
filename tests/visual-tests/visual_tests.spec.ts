@@ -1,5 +1,4 @@
 import { test, expect } from "@playwright/test";
-import path from "path";
 import { LoginPage } from "../../src/pages/login_page.ts";
 import { DashboardPage } from "../../src/pages/dashboard_page.ts";
 

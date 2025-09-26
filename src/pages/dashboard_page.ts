@@ -1,4 +1,4 @@
-import { expect, Locator, Page, test } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 import { ProfilePage } from "./profile_page.ts";
 import { LoginPage } from "./login_page.ts";
 
@@ -91,7 +91,13 @@ export class DashboardPage {
     return this;
   }
 
-  async verifySavedProfileData(profileInformation: any): Promise<this> {
+  async verifySavedProfileData(profileInformation: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    age: string;
+  }): Promise<this> {
     await expect(this.profileName).toContainText(profileInformation.firstName);
     await expect(this.profileSurname).toContainText(
       profileInformation.lastName,

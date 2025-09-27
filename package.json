@@ -1,0 +1,43 @@
+{
+  "name": "playwright_certificate_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "husky",
+    "format": "prettier --write --ignore-unknown .",
+    "lint": "eslint .",
+    "lint-fix": "eslint --fix ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Monica-Rei/playwright_certificate_project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Monica-Rei/playwright_certificate_project/issues"
+  },
+  "homepage": "https://github.com/Monica-Rei/playwright_certificate_project#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "@faker-js/faker": "^10.0.0",
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^24.3.1",
+    "dotenv": "^17.2.2",
+    "eslint": "^9.36.0",
+    "eslint-plugin-playwright": "^2.2.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.1",
+    "prettier": "3.6.2",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.44.1"
+  },
+  "lint-staged": {
+    "**/*": [
+      "eslint --fix",
+      "prettier --write --ignore-unknown"
+    ]
+  }
+}

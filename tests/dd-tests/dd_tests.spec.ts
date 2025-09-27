@@ -1,0 +1,55 @@
+import accountBalanceData from "../../src/assets/account_balance_data.json";
+import { test } from "@playwright/test";
+import { LoginPage } from "../../src/pages/login_page.ts";
+import { User } from "../../src/user/user.ts";
+import { UserApi } from "../../src/api/user_api.ts";
+
+test.describe("Data Driven Tests", () => {
+  accountBalanceData.forEach((account, index) => {
+    test(`${index + 1} DDT: Acount Balance: ${account.description}`, async ({
+      page,
+      request,
+    }) => {
+      test.skip(account.skipTest, account.skipTestReason);
+
+      const testUser = new User();
+      testUser.generateFakeData();
+      testUser.accountBalance = account.balance;
+
+      const loginPage = new LoginPage(page);
+
+      // register user
+      await loginPage
+        .openPage()
+        .then((loginPage) => loginPage.clickRegister())
+        .then((registerPage) =>
+          registerPage.registerUser(
+            testUser.password,
+            testUser.email,
+            testUser.username,
+          ),
+        );
+
+      // create account via API for registered user
+      const userApi = new UserApi(request);
+      await userApi
+        .login(testUser.username, testUser.password)
+        .then((userApi) => {
+          userApi.createAccount(testUser.accountBalance);
+        });
+
+      // verify account balance
+      await loginPage
+        .openPage()
+        .then((loginPage) =>
+          loginPage.loginUser(testUser.username, testUser.password),
+        )
+        .then((dashboardPage) => dashboardPage.verifyDashboardLoaded())
+        .then((dashboardPage) => dashboardPage.verifyAccountCreated())
+        .then((dashboardPage) =>
+          dashboardPage.verifyFirstAccountBalance(testUser.accountBalance),
+        )
+        .then((dashboardPage) => dashboardPage.logout());
+    });
+  });
+});

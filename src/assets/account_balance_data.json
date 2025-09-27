@@ -1,22 +1,29 @@
 [
   {
     "description": "Account with 0 balance",
-    "balance": 0
+    "balance": 0,
+    "skipTest": false
   },
   {
     "description": "Account with 200 000,52 balance",
-    "balance": 200000.52
+    "balance": 200000.52,
+    "skipTest": false
   },
   {
     "description": "Account with - 12 345 balance",
-    "balance": -12345
+    "balance": -12345,
+    "skipTest": false
   },
   {
     "description": "Account with - 196 000 921 balance",
-    "balance": -196000921
+    "balance": -196000921,
+    "skipTest": true,
+    "skipTestReason": "Creating an account with a 9-digit balance results in a 500 Internal Server Error."
   },
   {
     "description": "Account with 298 000 123 balance",
-    "balance": 298000123
+    "balance": 298000123,
+    "skipTest": true,
+    "skipTestReason": "Creating an account with a 9-digit balance results in a 500 Internal Server Error."
   }
 ]

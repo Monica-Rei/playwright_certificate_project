@@ -59,7 +59,6 @@ export class RegisterPage {
       await this.typePassword(password);
       await this.typeEmail(email);
       return this.clickRegister().then((loginPage) =>
-        // TODO add text to strings map
         loginPage.expectSuccessMessage("Registrace úspěšná! Vítejte v TEG#B!"),
       );
     });

@@ -100,7 +100,7 @@ test.describe("Atomic Tests: Check Dashboard Page", () => {
     const dashboardPage = new DashboardPage(page);
 
     await expect(dashboardPage.profileButton).toBeVisible();
-    await expect(dashboardPage.profileButton).toHaveText("Upravit profil"); // TODO move to vocabulary
+    await expect(dashboardPage.profileButton).toHaveText("Upravit profil");
 
     const profilePage = await dashboardPage.openProfileSetting();
     await expect(profilePage.nameInput).toBeVisible(); // sanity check

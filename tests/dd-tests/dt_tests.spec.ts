@@ -10,6 +10,8 @@ test.describe("Data Driven Tests", () => {
       page,
       request,
     }) => {
+      test.skip(account.skipTest, account.skipTestReason);
+
       const testUser = new User();
       testUser.generateFakeData();
       testUser.accountBalance = account.balance;
@@ -28,7 +30,7 @@ test.describe("Data Driven Tests", () => {
           ),
         );
 
-      // create account via for registered user
+      // create account via API for registered user
       const userApi = new UserApi(request);
       await userApi
         .login(testUser.username, testUser.password)

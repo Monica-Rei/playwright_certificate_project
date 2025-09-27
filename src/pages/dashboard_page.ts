@@ -37,7 +37,6 @@ export class DashboardPage {
     this.profileButton = this.page.locator(
       "//button[@data-testid='toggle-edit-profile-button']",
     );
-    //upravit xpath aby tam nebylo 0 ???
     this.firstAccount = this.page.locator("//tr[@data-testid='account-row-0']");
     this.firstAccountBalance = this.page.locator(
       "//tr[@data-testid='account-row-0']//td[@data-testid='account-balance']",
